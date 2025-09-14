@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WiseBond — Investment Platform </title>
+  <style>
+    /* Simple modern styling (no external libs). This is a single-file  */
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#3b82f6; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
+      --success:#10b981; --danger:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:linear-gradient(180deg,#071127 0%, #071b2a 100%); color:#e6eef8; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px}
+    .container{width:100%;max-width:1100px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700;color:#04263b}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:0;color:var(--muted)}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:20px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6);}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:16px}
+    .small{font-size:13px;color:var(--muted)}
+    .field{display:flex;flex-direction:column;margin-bottom:12px}
+    label{font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type=text], input[type=password], input[type=number], select, textarea{background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:10px;border-radius:8px;color:inherit;font-size:14px}
+    button{background:var(--accent);border:none;padding:10px 14px;border-radius:10px;color:#04263b;font-weight:600;cursor:pointer}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .muted{color:var(--muted)}
+    .center{text-align:center}
+    .coupon-note{font-size:13px;color:var(--muted);}
+    .notice{padding:10px;border-radius:8px;margin-bottom:12px}
+    .notice.warn{background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.02);}
+    .dashboard{display:flex;flex-direction:column;gap:10px}
+    .stat{display:flex;justify-content:space-between;padding:12px;border-radius:10px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));}
+    .expired{background:linear-gradient(90deg, rgba(239,68,68,0.12), rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.18);}
+    footer{margin-top:12px;color:var(--muted);font-size:13px}
+    .small-link{font-size:13px;color:var(--muted);text-decoration:underline;cursor:pointer}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.brand h1{font-size:18px}.logo{width:46px;height:46px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">WB</div>
+        <div>
+          <h1>WiseBond</h1>
+          <p class="lead">A simple investment front-end — registration requires coupon code.</p>
+        </div>
+      </div>
+      <div class="small">Site live for <strong id="days-left">--</strong> • <span id="countdown">--</span></div>
+    </header>
+ <img src="./asset/image/wisebond.jpg">
+    <main class="card">
+      <div class="grid">
+        <section>
+          <div class="notice warn">
+            <strong>Quick notes:</strong> This is investment update allows you have a great financial breakthrouh.y
+          </div>
+
+          <div id="main-area">
+            <!-- Unauthenticated view: registration & login -->
+            <div id="auth-area">
+              <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px">
+                <h2 style="margin:0">Get started</h2>
+                <div class="small muted">Create account with coupon</div>
+              </div>
+
+              <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <div style="flex:1;min-width:260px">
+                  <div class="field">
+                    <label>Full Name</label>
+                    <input id="reg-name" type="text" placeholder="Jane Doe">
+                  </div>
+                  <div class="field">
+                    <label>Email</label>
+                    <input id="reg-email" type="text" placeholder="you@example.com">
+                  </div>
+                  <div class="field">
+                    <label>Password</label>
+                    <input id="reg-password" type="password" placeholder="Choose a strong password">
+                  </div>
+                  <div class="field">
+                    <label>Coupon Code <span class="coupon-note">(required)</span></label>
+                    <input id="reg-coupon" type="text" placeholder="Enter coupon code">
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <button id="btn-register">Register</button>
+                    <button class="ghost" id="btn-sample-codes">Show sample coupons</button>
+                  </div>
+                </div>
+
+                <div style="width:320px;">
+                  <h3 style="margin-bottom:6px">Already have an account?</h3>
+                  <div class="field">
+                    <label>Email</label>
+                    <input id="login-email" type="text" placeholder="you@example.com">
+                  </div>
+                  <div class="field">
+                    <label>Password</label>
+                    <input id="login-password" type="password" placeholder="Your password">
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button id="btn-login">Sign in</button>
+                    <button class="ghost" id="btn-guest">Try demo</button>
+                  </div>
+
+                  <div style="margin-top:12px;color:var(--muted);font-size:13px">
+                    <strong>Coupon rule:</strong> Only users who register with a valid coupon can create an account. Coupons below are case-insensitive.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dashboard (hidden until login) -->
+            <div id="dashboard-area" style="display:none;margin-top:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <div>
+                  <h2 style="margin:0">Dashboard</h2>
+                  <div class="small muted">Welcome, <span id="user-name">User</span></div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <div class="small muted">Balance: <strong id="user-balance">$0.00</strong></div>
+                  <button class="ghost" id="btn-logout">Logout</button>
+                </div>
+              </div>
+
+              <div class="dashboard">
+                <div class="stat">
+                  <div>
+                    <div class="small muted">Total Invested</div>
+                    <div style="font-weight:700;font-size:18px">$<span id="total-invested">0</span></div>
+                  </div>
+                  <div>
+                    <div class="small muted">Current Profit</div>
+                    <div style="font-weight:700;font-size:18px;color:var(--success)">$<span id="current-profit">0</span></div>
+                  </div>
+                </div>
+
+                <div class="card" style="padding:12px">
+                  <h3 style="margin:0 0 8px 0">Make an Investment</h3>
+                  <div class="field">
+                    <label>Plan</label>
+                    <select id="plan-select">
+                      <option value="starter" data-rate="0.05">Starter — 5% return (daily)</option>
+                      <option value="standard" data-rate="0.08">Standard — 8% return (daily)</option>
+                      <option value="pro" data-rate="0.12">Pro — 12% return (daily)</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Amount (USD)</label>
+                    <input id="invest-amount" type="number" min="1" placeholder="100">
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button id="btn-invest">Invest</button>
+                    <button class="ghost" id="btn-withdraw">Withdraw</button>
+                  </div>
+                </div>
+
+                <div id="transactions" style="margin-top:8px">
+                  <h3 style="margin:0 0 8px 0">Transactions</h3>
+                  <div id="tx-list" class="muted small">No transactions yet.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <aside>
+          <div class="card">
+            <h3 style="margin-top:0">Site controls</h3>
+            <div class="small muted" style="margin-bottom:8px">Admin / demo controls (client-side only)</div>
+            <div class="field">
+              <label>Available coupon codes (sample)</label>
+              <div id="coupon-list" class="small muted">Hidden — click "Show sample coupons"</div>
+            </div>
+            <div class="field">
+              <label>Set demo start (reset local timer)</label>
+              <input id="start-date" type="text" placeholder="YYYY-MM-DD or leave blank">
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button id="btn-set-start">Set</button>
+                <button class="ghost" id="btn-reset">Reset start</button>
+              </div>
+            </div>
+            <div style="margin-top:10px" class="small muted">
+              <strong>Important:</strong> All data is stored in your browser (localStorage). Clearing browser data removes accounts and timers.
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <h4 style="margin:0 0 8px 0">Support</h4>
+            <div class="small muted">For production: integrate a secure backend, database, payment processor, and server-side coupon validation.</div>
+            <div style="margin-top:8px">
+              <button id="btn-export" class="ghost">Export local data</button>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+
+      <footer>
+        <div class="small muted">WiseBond  — client-only. Built for you to copy and extend.</div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    /***********************************************************
+     * WiseBond — single-file 
+     * - Registration requires coupon code (validated client-side)
+     * - Site auto-expires 14 days after "start date" (stored as wisebond_start)
+     * - All user data stored in localStorage
+     ***********************************************************/
+
+    const SITE_KEY = 'wisebond_data_v1';
+    const START_KEY = 'wisebond_start_v1';
+    const SAMPLE_COUPONS = [
+      {code: 'WISE2025', desc: 'Standard access'},
+      {code: 'BOND50', desc: '50% bonus (demo only)'},
+      {code: 'TRIAL14', desc: '14-day trial'},
+    ];
+
+    // Utilities
+    const $ = id => document.getElementById(id);
+    function saveData(data){ localStorage.setItem(SITE_KEY, JSON.stringify(data)); }
+    function loadData(){ return JSON.parse(localStorage.getItem(SITE_KEY) || '{"users":[],"sessions":{}}'); }
+
+    // Start / expiration logic (14 days)
+    function setStartDate(dateStr){
+      if(!dateStr){ localStorage.removeItem(START_KEY); initStart(); return; }
+      const d = new Date(dateStr + 'T00:00:00');
+      if(isNaN(d)) return alert('Invalid date format. Use YYYY-MM-DD');
+      localStorage.setItem(START_KEY, d.toISOString());
+      initStart();
+    }
+    function initStart(){
+      let raw = localStorage.getItem(START_KEY);
+      if(!raw){ // set first visit as start
+        const now = new Date();
+        localStorage.setItem(START_KEY, now.toISOString());
+        raw = localStorage.getItem(START_KEY);
+      }
+      const start = new Date(raw);
+      const expiry = new Date(start.getTime() + 14*24*60*60*1000);
+
+      function updateCountdown(){
+        const now = new Date();
+        if(now > expiry){
+          $('days-left').textContent = '0 days';
+          $('countdown').textContent = 'Expired';
+          document.body.classList.add('expired');
+          disableAll('Site has expired.');
+          return;
+        }
+        const diff = expiry - now;
+        const d = Math.floor(diff / (24*60*60*1000));
+        const h = Math.floor(diff % (24*60*60*1000) / (60*60*1000));
+        const m = Math.floor(diff % (60*60*1000) / (60*1000));
+        $('days-left').textContent = d + ' day' + (d===1?'':'s');
+        $('countdown').textContent = `${h}h ${m}m left (expires ${expiry.toLocaleString()})`;
+      }
+      updateCountdown();
+      setInterval(updateCountdown, 60*1000);
+    }
+
+    function disableAll(msg){
+      // Hide auth and dashboard, show expired notice
+      const main = $('main-area');
+      main.innerHTML = `<div class="notice expired"><strong>Site expired:</strong> ${msg}</div>`;
+    }
+
+    // Simple (insecure) password hashing for demo (NOT for production)
+    async function hashPass(pw){
+      // utf-8 to base64 friendly hash using SubtleCrypto
+      const enc = new TextEncoder();
+      const data = enc.encode(pw);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      const arr = Array.from(new Uint8Array(hash));
+      return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    // Registration logic
+    $('btn-sample-codes').addEventListener('click', ()=>{
+      $('coupon-list').textContent = SAMPLE_COUPONS.map(c=>`${c.code} — ${c.desc}`).join('\n');
+      alert('Sample coupon codes:\n' + SAMPLE_COUPONS.map(c=>c.code).join(', '));
+    });
+
+    $('btn-register').addEventListener('click', async ()=>{
+      const name = $('reg-name').value.trim();
+      const email = $('reg-email').value.trim().toLowerCase();
+      const pw = $('reg-password').value;
+      const coupon = $('reg-coupon').value.trim().toUpperCase();
+      if(!name||!email||!pw||!coupon) return alert('Please fill all fields and provide coupon code.');
+
+      // validate coupon (case-insensitive)
+      const ok = SAMPLE_COUPONS.some(c=>c.code.toUpperCase()===coupon);
+      if(!ok) return alert('Invalid coupon code. Contact admin.');
+
+      const data = loadData();
+      if(data.users.some(u=>u.email===email)) return alert('An account with this email already exists.');
+      const hp = await hashPass(pw);
+      const user = {id:Date.now(), name, email, password:hp, balance:0, invested:0, tx:[] };
+      data.users.push(user);
+      saveData(data);
+      alert('Registered successfully. You can now sign in.');
+      // Optionally auto-login
+      showLoginPrefill(email);
+    });
+
+    function showLoginPrefill(email){ $('login-email').value = email; }
+
+    // Login
+    $('btn-login').addEventListener('click', async ()=>{
+      const email = $('login-email').value.trim().toLowerCase();
+      const pw = $('login-password').value;
+      if(!email||!pw) return alert('Enter email and password.');
+      const data = loadData();
+      const user = data.users.find(u=>u.email===email);
+      if(!user) return alert('No such user.');
+      const hp = await hashPass(pw);
+      if(hp !== user.password) return alert('Incorrect password.');
+      // create session (client-side)
+      data.sessions.current = user.id;
+      saveData(data);
+      renderDashboard(user.id);
+    });
+
+    // Guest / Main acess
+    $('btn-guest').addEventListener('click', ()=>{
+      const data = loadData();
+      // create temporary user if not exists
+      let guest = data.users.find(u=>u.email==='guest@wisebond.local');
+      if(!guest){ guest = {id:Date.now(), name:'Demo Guest', email:'guest@wisebond.local', password:'', balance:500, invested:0, tx:[]}; data.users.push(guest); }
+      data.sessions.current = guest.id; saveData(data); renderDashboard(guest.id);
+    });
+
+    // Logout
+    $('btn-logout').addEventListener('click', ()=>{ const data = loadData(); delete data.sessions.current; saveData(data); location.reload(); });
+
+    // Invest
+    $('btn-invest').addEventListener('click', ()=>{
+      const amt = Number($('invest-amount').value);
+      if(!amt || amt<=0) return alert('Enter valid amount');
+      const plan = document.getElementById('plan-select');
+      const rate = Number(plan.options[plan.selectedIndex].dataset.rate);
+      const data = loadData();
+      const uid = data.sessions && data.sessions.current; if(!uid) return alert('Sign in first');
+      const user = data.users.find(u=>u.id===uid);
+      // simple immediate profit simulation
+      const profit = +(amt * rate).toFixed(2);
+      user.invested = (user.invested || 0) + amt;
+      user.balance = (user.balance || 0) + profit; // credit profit immediately for demo
+      const tx = {id:Date.now(), type:'invest', amount:amt, profit, plan:plan.value, date:new Date().toISOString()};
+      user.tx.unshift(tx);
+      saveData(data);
+      renderDashboard(uid);
+      alert(`Invested $${amt}. Profit credited: $${profit}`);
+    });
+
+    // Withdraw 
+    $('btn-withdraw').addEventListener('click', ()=>{
+      const data = loadData(); const uid = data.sessions && data.sessions.current; if(!uid) return alert('Sign in first');
+      const user = data.users.find(u=>u.id===uid);
+      const amount = user.balance || 0;
+      if(!amount) return alert('No balance to withdraw');
+      user.tx.unshift({id:Date.now(), type:'withdraw', amount, date:new Date().toISOString()});
+      user.balance = 0;
+      saveData(data); renderDashboard(uid); alert('Withdrawal requested (demo): $' + amount);
+    });
+
+    // Transactions rendering
+    function renderDashboard(uid){
+      const data = loadData(); const user = data.users.find(u=>u.id===uid);
+      if(!user) return alert('User not found');
+      $('auth-area').style.display = 'none';
+      $('dashboard-area').style.display = 'block';
+      $('user-name').textContent = user.name;
+      $('user-balance').textContent = (user.balance || 0).toFixed(2);
+      $('total-invested').textContent = (user.invested || 0).toFixed(2);
+      $('current-profit').textContent = (user.balance || 0).toFixed(2);
+      const txList = $('tx-list');
+      if(!user.tx || user.tx.length===0) txList.textContent = 'No transactions yet.';
+      else txList.innerHTML = '<ul style="padding-left:16px;margin:0">' + user.tx.map(t=>`<li style="margin-bottom:6px">[${new Date(t.date).toLocaleString()}] ${t.type.toUpperCase()} — $${t.amount}${t.profit?(' (profit $'+t.profit+')'):''}</li>`).join('') + '</ul>';
+    }
+
+    // Export local data
+    $('btn-export').addEventListener('click', ()=>{
+      const data = localStorage.getItem(SITE_KEY) || '{}';
+      const blob = new Blob([data], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'wisebond_local_data.json'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    // Controls for start date
+    $('btn-set-start').addEventListener('click', ()=>{ setStartDate($('start-date').value.trim()); });
+    $('btn-reset').addEventListener('click', ()=>{ localStorage.removeItem(START_KEY); initStart(); alert('Start date reset') });
+
+    // Initialize
+    (function(){ initStart(); // wire up initial session
+      const data = loadData(); if(data.sessions && data.sessions.current){ renderDashboard(data.sessions.current); }
+    })();
+
+    // Allow admin to set start via query param ?start=YYYY-MM-DD (to help testing)
+    (function(){ const params = new URLSearchParams(location.search); if(params.get('start')){ setStartDate(params.get('start')); } })();
+
+  </script>
+</body>
+</html>
